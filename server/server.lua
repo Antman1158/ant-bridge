@@ -15,8 +15,8 @@ elseif GetResourceState('ox_inventory') == 'started' then
     Inventory = "ox_inventory"
 elseif GetResourceState('ps-inventory') == 'started' then
     Inventory = "ps-inventory"
-elseif GetResourceState('qs-inventory') == 'started' then
-    Inventory = "qs-inventory"
+elseif GetResourceState('ak47_inventory') == 'started' then
+    Inventory = "ak47_inventory"
 end
 
 AddEventHandler('onResourceStart', function(resourceName)
@@ -45,8 +45,8 @@ function RemoveItem(Player, itemname, quantity)
     return Player.Functions.RemoveItem(itemname, quantity)
   elseif Inventory == "ox_inventory" then
     return exports.ox_inventory:RemoveItem(Player, itemname, quantity)
-  elseif Inventory == "qs-inventory" then
-    exports['qs-inventory']:RemoveItem(Player, itemname, quantity)
+  elseif Inventory == "ak47_inventory" then
+    exports['ak47_inventory']:RemoveItem(Player, itemname, quantity)
   end
 end
 
@@ -57,8 +57,8 @@ function AddItem(Player, itemname, quantity)
     return Player.Functions.AddItem(itemname, quantity)
   elseif Inventory == "ox_inventory" then
     return exports.ox_inventory:AddItem(Player, itemname, quantity)
-  elseif Inventory == "qs-inventory" then
-    return exports['qs-inventory']:AddItem(Player, itemname, quantity)
+  elseif Inventory == "ak47_inventory" then
+    return exports['ak47_inventory']:AddItem(Player, itemname, quantity)
   end
 end
 
@@ -84,8 +84,13 @@ function OpenStash(src, data, slot, maxweights)
       RegisteredStashes[data.stash] = true
     end
     TriggerClientEvent("burgershot:client:ForceOpenStash", src, data)
-  elseif Inventory == "qs-inventory" then
-    exports['qs-inventory']:RegisterStash(data.stash, slot, maxweights) 
+  elseif Inventory == "ak47_inventory" then
+    if not RegisteredStashes[data.stash] then
+      exports['ak47_inventory']:CreateInventory(data.stash, {label = data.stash, maxWeight = maxweights, slots = slot, type = 'stash',})
+      exports['ak47_inventory']:OpenInventory(src, data.stash)
+      RegisteredStashes[data.stash] = true
+    else
+      exports['ak47_inventory']:OpenInventory(src, data.stash)
   end
 end
 

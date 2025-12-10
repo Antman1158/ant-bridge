@@ -11,8 +11,8 @@ if GetResourceState('qb-inventory') == 'started' then
   Inventory = "qb-inventory"
 elseif GetResourceState('ox_inventory') == 'started' then
   Inventory = "ox_inventory"
-elseif GetResourceState('qs-inventory') == 'started' then
-  Inventory = "qs-inventory"
+elseif GetResourceState('ak47_inventory') == 'started' then
+  Inventory = "ak47_inventory"
 elseif GetResourceState('ps-inventory') == 'started' then
   Inventory = "ps-inventory"
 end
@@ -76,6 +76,8 @@ function OpenInventory(data)
     TriggerServerEvent("burgershot:server:CreateStash", data)
   elseif Inventory == "ox_inventory" then
     exports.ox_inventory:openInventory('stash', data.stash)
+  elseif Inventory == "ak47_inventory" then
+    exports['ak47_inventory']:OpenInventory(data.stash)
   end
 end
 
