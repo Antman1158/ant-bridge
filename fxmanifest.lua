@@ -1,7 +1,7 @@
 fx_version 'cerulean'
 game 'gta5'
-description 'Ant-Bridge'
-version '1.0.1'
+description 'ant-bridge'
+version '1.0.2'
 lua54 'yes'
 
 shared_scripts {
@@ -52,5 +52,9 @@ server_exports {
     'GetItemName',
     'GetItemAmount',
     'AddFundstoSociety',
-    'RemoveFundsFromSociety'
+    'RemoveFundsFromSociety',
+    'HasItem',
+    'GetMetaData',
+    'SetMetaData',
+    'RegisterShop'
 }

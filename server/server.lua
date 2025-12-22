@@ -91,6 +91,25 @@ function OpenStash(src, data, slot, maxweights)
       RegisteredStashes[data.stash] = true
     else
       exports['ak47_inventory']:OpenInventory(src, data.stash)
+    end
+  end
+end
+
+function RegisterShop(data)
+  return exports.ox_inventory:RegisterShop(data.shop,{ name = data.name, inventory = data.items})
+end
+
+function CanCarry(src, Player, item, amount)
+  if Inventory == "ox_inventory" then
+    return exports.ox_inventory:CanCarryItem(src, item, amount)
+  elseif Inventory == "ak47_inventory" then
+    return exports['ak47_inventory']:CanCarryItem(src, item, amount)
+  elseif Inventory == "qb-inventory" or Inventory == "ps-inventory" then
+    local itemData = QBCore.Shared.Items[item]
+    local currentWeight = Player.PlayerData.weight or 0
+    local itemWeight = (itemData.weight or 0) * amount
+    local maxWeight = QBCore.Config.Player.MaxWeight
+    return (currentWeight + itemWeight) <= maxWeight
   end
 end
 
@@ -217,6 +236,31 @@ function GetItemAmount(Player, name)
   end
 end
 
+function HasItem(Player, name)
+  if Framework == "qb-core" then
+    return Player.Functions.GetItemByName(name) ~= nil
+  elseif Framework == "esx" then
+      Player.getInventoryItem(name)
+    return
+  end
+end
+
+function GetMetaData(Player, metadata)
+  if Framework == "qb-core" then
+    return Player.PlayerData.metadata[metadata]
+  elseif Framework == "esx" then
+    return Player.get(metadata)
+  end
+end
+
+function SetMetaData(Player, metadata, reward)
+  if Framework == "qb-core" then
+    return Player.Functions.SetMetaData(metadata, reward)
+  elseif Framework == "esx" then
+    return Player.set(metadata, reward)
+  end
+end
+
 -- Exports
 exports('RemoveItem', RemoveItem)
 exports('AddItem', AddItem)
@@ -237,3 +281,7 @@ exports('AddCash', AddCash)
 exports('AddCashDelivery', AddCashDelivery)
 exports('GetItemName', GetItemName)
 exports('GetItemAmount', GetItemAmount)
+exports('HasItem', HasItem)
+exports('GetMetaData', GetMetaData)
+exports('SetMetaData', SetMetaData)
+exports('RegisterShop', RegisterShop)

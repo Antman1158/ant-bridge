@@ -69,6 +69,12 @@ function LastName()
     end
 end
 
+function CitizenID()
+  if Framework == "qb-core" then
+    return QBCore.Functions.GetPlayerData().charinfo.citizenid
+  end
+end
+
 function OpenInventory(data)
   if Inventory == "qb-inventory" then
     TriggerServerEvent("burgershot:server:CreateStash", data)
@@ -78,6 +84,12 @@ function OpenInventory(data)
     exports.ox_inventory:openInventory('stash', data.stash)
   elseif Inventory == "ak47_inventory" then
     exports['ak47_inventory']:OpenInventory(data.stash)
+  end
+end
+
+function OpenShop(data)
+  if Inventory == "ox_inventory" then
+    exports.ox_inventory:openInventory('shop', { type = data.shop })
   end
 end
 
@@ -117,15 +129,27 @@ end
 
 function OpenBossMenu()
   if Management == "qb-management" then
-    TriggerEvent('qb-bossmenu:client:OpenMenu')
+    return TriggerEvent('qb-bossmenu:client:OpenMenu')
   elseif Management == "qbx-management" then
-    exports.qbx_management:OpenBossMenu('job')
+    return exports.qbx_management:OpenBossMenu('job')
   elseif Management == "esx_society" then
-    TriggerEvent('esx_society:openBossMenu', 'burgershot', function(data, menu)
+    return TriggerEvent('esx_society:openBossMenu', 'burgershot', function(data, menu)
       menu.close()
     end, {wash = false})
   elseif Management == "ant-management" then
-    TriggerEvent('ant-bossmenu:client:openMenu')
+    return TriggerEvent('ant-bossmenu:client:openMenu')
+  end
+end
+
+function GetMetaData(PlayerData, metadata)
+  if Framework == "qb-core" then
+    return PlayerData.metadata[metadata]
+  end
+end
+
+function GetLicense(PlayerData, license)
+  if Framework == "qb-core" then
+    return PlayerData.metadata.licences[license]
   end
 end
 
@@ -140,3 +164,5 @@ exports('PlayerJobName', PlayerJobName)
 exports('IsBoss', IsBoss)
 exports('OpenBossMenu', OpenBossMenu)
 exports('Voice', Voice)
+exports('GetLicense', GetLicense)
+exports('OpenShop', OpenShop)
