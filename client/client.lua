@@ -1,9 +1,9 @@
 -- Get Framework
 if GetResourceState('qb-core') == 'started' then
-    Framework = "qb-core"
-    QBCore = exports['qb-core']:GetCoreObject()
+  Framework = "qb-core"
+  QBCore = exports['qb-core']:GetCoreObject()
 elseif GetResourceState('es_extended') == 'started' then
-    Framework = "esx"
+  Framework = "esx"
 end
 
 -- Get Inventory
@@ -19,13 +19,13 @@ end
 
 -- Get Management
 if GetResourceState('qb-management') == 'started' then
-    Management = "qb-management"
+  Management = "qb-management"
 elseif GetResourceState('qbx_management') == 'started' then
-    Management = "qbx-management"
+  Management = "qbx-management"
 elseif GetResourceState('esx_society') == 'started' then
-    Management = "esx_society"
-    elseif GetResourceState('ant-management') == 'started' then
-    Management = "ant-management"
+  Management = "esx_society"
+  elseif GetResourceState('ant-management') == 'started' then
+  Management = "ant-management"
 end
 
 -- Get Voice
@@ -34,17 +34,17 @@ if GetResourceState('pma-voice') == 'started' then
 end
 
 function GetPlayerData()
-    if Framework == "qb-core" then
-        return QBCore.Functions.GetPlayerData()
-    elseif Framework == "esx" then
-        return ESX.GetPlayerData()
-    end
+  if Framework == "qb-core" then
+    return QBCore.Functions.GetPlayerData()
+  elseif Framework == "esx" then
+    return ESX.GetPlayerData()
+  end
 end
 
 PlayerData = GetPlayerData()
 
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
-    PlayerData = QBCore.Functions.GetPlayerData()
+  PlayerData = QBCore.Functions.GetPlayerData()
 end)
 
 function Voice(Channel)
@@ -54,19 +54,19 @@ function Voice(Channel)
 end
 
 function FirstName()
-    if Framework == "qb-core" then
-        return QBCore.Functions.GetPlayerData().charinfo.firstname
-    elseif Framework == "esx" then
-        return ESX.PlayerData.firstName
-    end
+  if Framework == "qb-core" then
+    return QBCore.Functions.GetPlayerData().charinfo.firstname
+  elseif Framework == "esx" then
+    return ESX.PlayerData.firstName
+  end
 end
 
 function LastName()
-    if Framework == "qb-core" then
-        return QBCore.Functions.GetPlayerData().charinfo.lastname
-    elseif Framework == "esx" then
-        return ESX.PlayerData.lastName
-    end
+  if Framework == "qb-core" then
+    return QBCore.Functions.GetPlayerData().charinfo.lastname
+  elseif Framework == "esx" then
+    return ESX.PlayerData.lastName
+  end
 end
 
 function CitizenID()
@@ -81,15 +81,15 @@ function OpenInventory(data)
   elseif Inventory == "ps-inventory" then
     TriggerServerEvent("burgershot:server:CreateStash", data)
   elseif Inventory == "ox_inventory" then
-    exports.ox_inventory:openInventory('stash', data.stash)
+    return exports.ox_inventory:openInventory('stash', data.stash)
   elseif Inventory == "ak47_inventory" then
-    exports['ak47_inventory']:OpenInventory(data.stash)
+    return exports['ak47_inventory']:OpenInventory(data.stash)
   end
 end
 
 function OpenShop(data)
   if Inventory == "ox_inventory" then
-    exports.ox_inventory:openInventory('shop', { type = data.shop })
+    return exports.ox_inventory:openInventory('shop', { type = data.shop })
   end
 end
 
@@ -101,14 +101,14 @@ function OpenStashPSInventory(data)
 end
 
 function GetJobStatus(job)
-    if Framework == "qb-core" then
-        local data = QBCore.Functions.GetPlayerData()
-        return data.job.name == job and data.job.onduty == true
-    elseif Framework == "esx" then
-        local data = ESX.GetPlayerData()
-        return data.job and data.job.name == job
-    end
-    return false
+  if Framework == "qb-core" then
+    local data = QBCore.Functions.GetPlayerData()
+    return data.job.name == job and data.job.onduty == true
+  elseif Framework == "esx" then
+    local data = ESX.GetPlayerData()
+    return data.job and data.job.name == job
+  end
+  return false
 end
 
 function PlayerJobName()
@@ -166,3 +166,5 @@ exports('OpenBossMenu', OpenBossMenu)
 exports('Voice', Voice)
 exports('GetLicense', GetLicense)
 exports('OpenShop', OpenShop)
+exports('GetMetaData', GetMetaData)
+exports('CheckLevel', CheckLevel)

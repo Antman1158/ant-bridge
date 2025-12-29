@@ -20,45 +20,45 @@ elseif GetResourceState('ak47_inventory') == 'started' then
 end
 
 AddEventHandler('onResourceStart', function(resourceName)
-    if GetCurrentResourceName() ~= resourceName then return end
+  if GetCurrentResourceName() ~= resourceName then return end
 
     if Framework == "esx" then
     local exists = false
     TriggerEvent('esx_society:getSocieties', function(societies)
-        for _, s in ipairs(societies) do
-            if s.name == 'burgershot' then
-                exists = true
-                break
-            end
+      for _, s in ipairs(societies) do
+        if s.name == 'burgershot' then
+          exists = true
+          break
         end
+      end
     end)
     if not exists then
-        exports["esx_society"]:registerSociety('burgershot', 'Burgershot', 'society_burgershot', 'society_burgershot', 'society_burgershot', {type = 'private'})
+      exports["esx_society"]:registerSociety('burgershot', 'Burgershot', 'society_burgershot', 'society_burgershot', 'society_burgershot', {type = 'private'})
     end
   end
 end)
 
-function RemoveItem(Player, itemname, quantity)
+function RemoveItem(src, itemname, quantity)
   if Inventory == "qb-inventory" then
     return Player.Functions.RemoveItem(itemname, quantity)
   elseif Inventory == "ps-inventory" then
     return Player.Functions.RemoveItem(itemname, quantity)
   elseif Inventory == "ox_inventory" then
-    return exports.ox_inventory:RemoveItem(Player, itemname, quantity)
+    return exports.ox_inventory:RemoveItem(src, itemname, quantity)
   elseif Inventory == "ak47_inventory" then
-    exports['ak47_inventory']:RemoveItem(Player, itemname, quantity)
+    return exports['ak47_inventory']:RemoveItem(src, itemname, quantity)
   end
 end
 
-function AddItem(Player, itemname, quantity)
+function AddItem(src, itemname, quantity)
   if Inventory == "qb-inventory" then
     return Player.Functions.AddItem(itemname, quantity)
   elseif Inventory == "ps-inventory" then
     return Player.Functions.AddItem(itemname, quantity)
   elseif Inventory == "ox_inventory" then
-    return exports.ox_inventory:AddItem(Player, itemname, quantity)
+    return exports.ox_inventory:AddItem(src, itemname, quantity)
   elseif Inventory == "ak47_inventory" then
-    return exports['ak47_inventory']:AddItem(Player, itemname, quantity)
+    return exports['ak47_inventory']:AddItem(src, itemname, quantity)
   end
 end
 
@@ -73,8 +73,8 @@ end
 function OpenStash(src, data, slot, maxweights)
   if Inventory == "qb-inventory" then
     exports['qb-inventory']:OpenInventory(src, data.stash, {
-        maxweight = maxweights,
-        slots = slot,
+      maxweight = maxweights,
+      slots = slot,
     })
   elseif Inventory == "ps-inventory" then
     TriggerClientEvent("burgershot:client:triggerpsinventory", src, data)
@@ -90,13 +90,19 @@ function OpenStash(src, data, slot, maxweights)
       exports['ak47_inventory']:OpenInventory(src, data.stash)
       RegisteredStashes[data.stash] = true
     else
-      exports['ak47_inventory']:OpenInventory(src, data.stash)
+      return exports['ak47_inventory']:OpenInventory(src, data.stash)
     end
   end
 end
 
 function RegisterShop(data)
-  return exports.ox_inventory:RegisterShop(data.shop,{ name = data.name, inventory = data.items})
+  if Inventory == "qb-inventory" then
+    TriggerServerEvent('inventory:server:OpenInventory', 'shop', 'Fishing', Config.Items)
+  elseif Inventory == "ps-inventory" then
+    TriggerServerEvent('inventory:server:OpenInventory', 'shop', 'Fishing', Config.Items)
+  elseif Inventory == "ox_inventory" then
+    return exports.ox_inventory:RegisterShop(data.shop,{ name = data.name, inventory = data.items})
+  end
 end
 
 function CanCarry(src, Player, item, amount)
@@ -191,7 +197,7 @@ function RemoveCash(Player, pay)
   if Framework == "qb-core" then
     return Player.Functions.RemoveMoney('cash', pay)
   elseif Framework == "esx" then
-    Player.removeAccountMoney('money', pay)
+    return Player.removeAccountMoney('money', pay)
   end
 end
 
@@ -199,7 +205,7 @@ function RemoveBank(Player, pay)
   if Framework == "qb-core" then
     return Player.Functions.RemoveMoney('bank', pay)
   elseif Framework == "esx" then
-    Player.removeAccountMoney('bank', pay)
+    return Player.removeAccountMoney('bank', pay)
   end
 end
 
@@ -207,7 +213,7 @@ function AddCash(Player, pay)
   if Framework == "qb-core" then
     return Player.Functions.AddMoney('cash', pay)
   elseif Framework == "esx" then
-    Player.addAccountMoney('money', pay)
+    return Player.addAccountMoney('money', pay)
   end
 end
 
@@ -216,7 +222,7 @@ function AddCashDelivery(Player, pay, commission)
     local amount = pay * commission
     return Player.Functions.AddMoney('cash', amount)
   elseif Framework == "esx" then
-    Player.addAccountMoney('money', pay)
+    return Player.addAccountMoney('money', pay)
   end
 end
 
@@ -240,7 +246,7 @@ function HasItem(Player, name)
   if Framework == "qb-core" then
     return Player.Functions.GetItemByName(name) ~= nil
   elseif Framework == "esx" then
-      Player.getInventoryItem(name)
+    return Player.getInventoryItem(name)
     return
   end
 end
@@ -285,3 +291,4 @@ exports('HasItem', HasItem)
 exports('GetMetaData', GetMetaData)
 exports('SetMetaData', SetMetaData)
 exports('RegisterShop', RegisterShop)
+exports('CanCarry', CanCarry)

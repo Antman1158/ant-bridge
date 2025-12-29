@@ -1,7 +1,7 @@
 fx_version 'cerulean'
 game 'gta5'
 description 'ant-bridge'
-version '1.0.2'
+version '1.0.3'
 lua54 'yes'
 
 shared_scripts {
