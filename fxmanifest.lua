@@ -1,11 +1,10 @@
 fx_version 'cerulean'
 game 'gta5'
 description 'ant-bridge'
-version '1.0.3'
+version '1.0.1'
 lua54 'yes'
 
 shared_scripts {
-    '@qb-core/shared/locale.lua',
     --'@es_extended/imports.lua',
     '@ox_lib/init.lua',
 }

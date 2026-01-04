@@ -38,7 +38,7 @@ AddEventHandler('onResourceStart', function(resourceName)
   end
 end)
 
-function RemoveItem(src, itemname, quantity)
+function RemoveItem(src, Player, itemname, quantity)
   if Inventory == "qb-inventory" then
     return Player.Functions.RemoveItem(itemname, quantity)
   elseif Inventory == "ps-inventory" then
@@ -50,7 +50,7 @@ function RemoveItem(src, itemname, quantity)
   end
 end
 
-function AddItem(src, itemname, quantity)
+function AddItem(src, Player, itemname, quantity)
   if Inventory == "qb-inventory" then
     return Player.Functions.AddItem(itemname, quantity)
   elseif Inventory == "ps-inventory" then
@@ -189,6 +189,7 @@ function GetPlayersBank(Player)
   if Framework == "qb-core" then
     return Player.PlayerData.money.bank
   elseif Framework == "esx" then
+    print('this ran')
     return Player.getAccount('bank').money
   end
 end
@@ -247,7 +248,6 @@ function HasItem(Player, name)
     return Player.Functions.GetItemByName(name) ~= nil
   elseif Framework == "esx" then
     return Player.getInventoryItem(name)
-    return
   end
 end
 
@@ -255,7 +255,7 @@ function GetMetaData(Player, metadata)
   if Framework == "qb-core" then
     return Player.PlayerData.metadata[metadata]
   elseif Framework == "esx" then
-    return Player.get(metadata)
+    return Player.getMeta(metadata) or 0
   end
 end
 
@@ -263,7 +263,7 @@ function SetMetaData(Player, metadata, reward)
   if Framework == "qb-core" then
     return Player.Functions.SetMetaData(metadata, reward)
   elseif Framework == "esx" then
-    return Player.set(metadata, reward)
+    return Player.setMeta(metadata, reward)
   end
 end
 

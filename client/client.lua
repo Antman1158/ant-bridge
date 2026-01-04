@@ -69,12 +69,6 @@ function LastName()
   end
 end
 
-function CitizenID()
-  if Framework == "qb-core" then
-    return QBCore.Functions.GetPlayerData().charinfo.citizenid
-  end
-end
-
 function OpenInventory(data)
   if Inventory == "qb-inventory" then
     TriggerServerEvent("burgershot:server:CreateStash", data)
@@ -141,15 +135,24 @@ function OpenBossMenu()
   end
 end
 
-function GetMetaData(PlayerData, metadata)
+function GetMetaData(Player, PlayerData, metadata)
   if Framework == "qb-core" then
     return PlayerData.metadata[metadata]
+  elseif Framework == "esx" then
+    return ESX.GetPlayerData().metadata['fishing']
   end
 end
 
-function GetLicense(PlayerData, license)
+function GetLicense(PlayerData, license, cb)
   if Framework == "qb-core" then
-    return PlayerData.metadata.licences[license]
+    cb(PlayerData.metadata.licences[license] == true)
+    return
+  elseif Framework == "esx" then
+    local target = GetPlayerServerId(PlayerId())
+    ESX.TriggerServerCallback('esx_license:checkLicense', function(haslicense)
+      cb(haslicense == true)
+    end, target, license)
+    return
   end
 end
 
