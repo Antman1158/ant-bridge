@@ -40,9 +40,9 @@ end)
 
 function RemoveItem(src, Player, itemname, quantity)
   if Inventory == "qb-inventory" then
-    return Player.Functions.RemoveItem(itemname, quantity)
+    return exports['qb-inventory']:RemoveItem(src, itemname, quantity)
   elseif Inventory == "ps-inventory" then
-    return Player.Functions.RemoveItem(itemname, quantity)
+    return exports['ps-inventory']:RemoveItem(src, itemname, quantity)
   elseif Inventory == "ox_inventory" then
     return exports.ox_inventory:RemoveItem(src, itemname, quantity)
   elseif Inventory == "ak47_inventory" then
@@ -52,9 +52,9 @@ end
 
 function AddItem(src, Player, itemname, quantity)
   if Inventory == "qb-inventory" then
-    return Player.Functions.AddItem(itemname, quantity)
+    return exports['qb-inventory']:AddItem(src, itemname, quantity)
   elseif Inventory == "ps-inventory" then
-    return Player.Functions.AddItem(itemname, quantity)
+    return exports['ps-inventory']:AddItem(src, itemname, quantity)
   elseif Inventory == "ox_inventory" then
     return exports.ox_inventory:AddItem(src, itemname, quantity)
   elseif Inventory == "ak47_inventory" then
@@ -72,12 +72,9 @@ end
 
 function OpenStash(src, data, slot, maxweights)
   if Inventory == "qb-inventory" then
-    exports['qb-inventory']:OpenInventory(src, data.stash, {
-      maxweight = maxweights,
-      slots = slot,
-    })
+    exports['qb-inventory']:OpenInventory(src, data.stash, {maxweight = maxweights, slots = slot})
   elseif Inventory == "ps-inventory" then
-    TriggerClientEvent("burgershot:client:triggerpsinventory", src, data)
+    exports['ps-inventory']:OpenInventory(src, data.stash, {maxweight = maxweights, slots = slot})
   elseif Inventory == "ox_inventory" then
     if not RegisteredStashes[data.stash] then
       exports.ox_inventory:RegisterStash(data.stash, data.stash, slot, maxweights)
@@ -95,11 +92,13 @@ function OpenStash(src, data, slot, maxweights)
   end
 end
 
-function RegisterShop(data)
+function RegisterShop(src, data)
   if Inventory == "qb-inventory" then
-    TriggerServerEvent('inventory:server:OpenInventory', 'shop', 'Fishing', Config.Items)
+    exports['ps-inventory']:CreateShop({name = data.shop, label = data.name, slots = #data.items, items = data.items})
+    exports['ps-inventory']:OpenShop(src, data.shop)
   elseif Inventory == "ps-inventory" then
-    TriggerServerEvent('inventory:server:OpenInventory', 'shop', 'Fishing', Config.Items)
+    exports['ps-inventory']:CreateShop({name = data.shop, label = data.name, slots = #data.items, items = data.items})
+    exports['ps-inventory']:OpenShop(src, data.shop)
   elseif Inventory == "ox_inventory" then
     return exports.ox_inventory:RegisterShop(data.shop,{ name = data.name, inventory = data.items})
   end
@@ -110,12 +109,10 @@ function CanCarry(src, Player, item, amount)
     return exports.ox_inventory:CanCarryItem(src, item, amount)
   elseif Inventory == "ak47_inventory" then
     return exports['ak47_inventory']:CanCarryItem(src, item, amount)
-  elseif Inventory == "qb-inventory" or Inventory == "ps-inventory" then
-    local itemData = QBCore.Shared.Items[item]
-    local currentWeight = Player.PlayerData.weight or 0
-    local itemWeight = (itemData.weight or 0) * amount
-    local maxWeight = QBCore.Config.Player.MaxWeight
-    return (currentWeight + itemWeight) <= maxWeight
+  elseif Inventory == "qb-inventory" then
+    return exports['qb-inventory']:CanAddItem(src, item, amount)
+  elseif Inventory == "ps-inventory" then
+    return true -- PS Doesn't Have a Weight Check Export
   end
 end
 
