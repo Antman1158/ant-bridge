@@ -50,15 +50,15 @@ function RemoveItem(src, Player, itemname, quantity)
   end
 end
 
-function AddItem(src, Player, itemname, quantity)
+function AddItem(src, Player, itemname, quantity, info)
   if Inventory == "qb-inventory" then
-    return exports['qb-inventory']:AddItem(src, itemname, quantity)
+    return exports['qb-inventory']:AddItem(src, itemname, quantity, nil, info)
   elseif Inventory == "ps-inventory" then
-    return exports['ps-inventory']:AddItem(src, itemname, quantity)
+    return exports['ps-inventory']:AddItem(src, itemname, quantity, nil, info)
   elseif Inventory == "ox_inventory" then
-    return exports.ox_inventory:AddItem(src, itemname, quantity)
+    return exports.ox_inventory:AddItem(src, itemname, quantity, nil, info)
   elseif Inventory == "ak47_inventory" then
-    return exports['ak47_inventory']:AddItem(src, itemname, quantity)
+    return exports['ak47_inventory']:AddItem(src, itemname, quantity, nil, info)
   end
 end
 
