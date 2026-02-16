@@ -52,13 +52,13 @@ end
 
 function AddItem(src, Player, itemname, quantity, info)
   if Inventory == "qb-inventory" then
-    return exports['qb-inventory']:AddItem(src, itemname, quantity, nil, info)
+    return exports['qb-inventory']:AddItem(src, itemname, quantity, info)
   elseif Inventory == "ps-inventory" then
-    return exports['ps-inventory']:AddItem(src, itemname, quantity, nil, info)
+    return exports['ps-inventory']:AddItem(src, itemname, quantity, info)
   elseif Inventory == "ox_inventory" then
-    return exports.ox_inventory:AddItem(src, itemname, quantity, nil, info)
+    return exports.ox_inventory:AddItem(src, itemname, quantity, info)
   elseif Inventory == "ak47_inventory" then
-    return exports['ak47_inventory']:AddItem(src, itemname, quantity, nil, info)
+    return exports['ak47_inventory']:AddItem(src, itemname, quantity, info)
   end
 end
 
@@ -234,9 +234,11 @@ end
 
 function GetItemAmount(Player, name)
   if Framework == "qb-core" then
-    return Player.Functions.GetItemByName(name).amount
+    local item = Player.Functions.GetItemByName(name)
+    return (item and item.amount) or 0
   elseif Framework == "esx" then
-    return Player.getInventoryItem(name).count
+    local item = Player.getInventoryItem(name)
+    return (item and item.count) or 0
   end
 end
 
@@ -261,6 +263,18 @@ function SetMetaData(Player, metadata, reward)
     return Player.Functions.SetMetaData(metadata, reward)
   elseif Framework == "esx" then
     return Player.setMeta(metadata, reward)
+  end
+end
+
+function GetSlotsWithItems(src, item)
+  if Inventory == "ox_inventory" then
+    return exports.ox_inventory:GetSlotsWithItem(src, item, metadata)
+  end
+end
+
+function GetItemQuality(src, items)
+  if Inventory == "ox_inventory" then
+    return items.metadata.type
   end
 end
 
@@ -289,3 +303,5 @@ exports('GetMetaData', GetMetaData)
 exports('SetMetaData', SetMetaData)
 exports('RegisterShop', RegisterShop)
 exports('CanCarry', CanCarry)
+exports('GetSlotsWithItems', GetSlotsWithItems)
+exports('GetItemQuality', GetItemQuality)

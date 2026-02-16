@@ -135,7 +135,7 @@ function OpenBossMenu()
   end
 end
 
-function GetMetaData(Player, PlayerData, metadata)
+function GetMetaData(PlayerData, metadata)
   if Framework == "qb-core" then
     return PlayerData.metadata[metadata]
   elseif Framework == "esx" then
