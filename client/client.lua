@@ -41,8 +41,6 @@ function GetPlayerData()
   end
 end
 
-PlayerData = GetPlayerData()
-
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
   PlayerData = QBCore.Functions.GetPlayerData()
 end)
@@ -139,7 +137,7 @@ function GetMetaData(PlayerData, metadata)
   if Framework == "qb-core" then
     return PlayerData.metadata[metadata]
   elseif Framework == "esx" then
-    return ESX.GetPlayerData().metadata['fishing']
+    return ESX.GetPlayerData().metadata[metadata]
   end
 end
 

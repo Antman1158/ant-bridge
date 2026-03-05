@@ -52,7 +52,7 @@ end
 
 function AddItem(src, Player, itemname, quantity, info)
   if Inventory == "qb-inventory" then
-    return exports['qb-inventory']:AddItem(src, itemname, quantity, info)
+    return exports['qb-inventory']:AddItem(src, itemname, quantity, nil, info)
   elseif Inventory == "ps-inventory" then
     return exports['ps-inventory']:AddItem(src, itemname, quantity, info)
   elseif Inventory == "ox_inventory" then
@@ -94,8 +94,8 @@ end
 
 function RegisterShop(src, data)
   if Inventory == "qb-inventory" then
-    exports['ps-inventory']:CreateShop({name = data.shop, label = data.name, slots = #data.items, items = data.items})
-    exports['ps-inventory']:OpenShop(src, data.shop)
+    exports['qb-inventory']:CreateShop({name = data.shop, label = data.name, slots = #data.items, items = data.items})
+    exports['qb-inventory']:OpenShop(src, data.shop)
   elseif Inventory == "ps-inventory" then
     exports['ps-inventory']:CreateShop({name = data.shop, label = data.name, slots = #data.items, items = data.items})
     exports['ps-inventory']:OpenShop(src, data.shop)
@@ -267,13 +267,20 @@ function SetMetaData(Player, metadata, reward)
 end
 
 function GetSlotsWithItems(src, item)
-  if Inventory == "ox_inventory" then
+  if Inventory == "qb-inventory" then
+    local Player = exports['ant-bridge']:PlayerSource(src)
+    return exports['qb-inventory']:GetSlotsByItem(Player.PlayerData.items, item)
+  elseif Inventory == "ox_inventory" then
     return exports.ox_inventory:GetSlotsWithItem(src, item, metadata)
+  elseif Inventory == "ak47_inventory" then
+    return exports['ak47_inventory']:GetSlotsWithItem(src, item, metadata)
   end
 end
 
 function GetItemQuality(src, items)
-  if Inventory == "ox_inventory" then
+  if Framework == "qb-core" then
+    return items.metadata or items.info
+  elseif Framework == "esx" then
     return items.metadata.type
   end
 end
